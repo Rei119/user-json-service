@@ -170,7 +170,7 @@ public class UserController {
 
 
     private String callSoap(String soapRequest) throws Exception {
-        java.net.URL url = new java.net.URL("http://localhost:9002/auth");
+    	java.net.URL url = new java.net.URL("https://user-soap-service.onrender.com/auth");
         java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "text/xml; charset=utf-8");
