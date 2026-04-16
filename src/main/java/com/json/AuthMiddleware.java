@@ -1,4 +1,5 @@
 package com.json;
+
 import org.springframework.stereotype.Component;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -8,11 +9,11 @@ import java.util.Scanner;
 
 @Component
 public class AuthMiddleware {
-    
-    private static final String SOAP_URL = System.getenv("SOAP_URL") != null 
-        ? System.getenv("SOAP_URL") 
+
+    private static final String SOAP_URL = System.getenv("SOAP_URL") != null
+        ? System.getenv("SOAP_URL")
         : "http://localhost:9002/auth";
-    
+
     public boolean validate(String token) {
         try {
             String soapRequest =

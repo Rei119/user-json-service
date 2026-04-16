@@ -13,14 +13,12 @@ public class UserController {
     private AuthMiddleware authMiddleware;
 
     @Autowired
-    private UserRepository userRepository; 
+    private UserRepository userRepository;
 
     private boolean isAuthorized(String token) {
         if (token == null) return false;
         return authMiddleware.validate(token);
     }
-
-    // ─── AUTH PROXY ───────────────────────────────────────────
 
     @GetMapping("/auth/register")
     public ResponseEntity<?> register(
@@ -72,8 +70,6 @@ public class UserController {
         }
     }
 
-    // ─── USER PROFILE CRUD ────────────────────────────────────
-
     @PostMapping("/users")
     public ResponseEntity<?> createProfile(
             @RequestHeader("Authorization") String token,
@@ -91,8 +87,7 @@ public class UserController {
         p.setEmail(email);
         p.setBio(bio);
         p.setPhone(phone);
-
-        userRepository.save(p); // Save to MongoDB
+        userRepository.save(p);
         return ResponseEntity.ok(p);
     }
 
@@ -134,11 +129,10 @@ public class UserController {
             if (name != null) p.setName(name);
             if (bio != null) p.setBio(bio);
             if (phone != null) p.setPhone(phone);
-            userRepository.save(p); // Save updated to MongoDB
+            userRepository.save(p);
             return ResponseEntity.ok((Object) p);
         }).orElse(ResponseEntity.status(404).body("{\"error\":\"Not found\"}"));
     }
-
 
     @PatchMapping("/users/{id}/image")
     public ResponseEntity<?> updateProfileImage(
@@ -168,9 +162,11 @@ public class UserController {
         return ResponseEntity.ok("{\"message\":\"Deleted\"}");
     }
 
-
     private String callSoap(String soapRequest) throws Exception {
-    	java.net.URL url = new java.net.URL("https://user-soap-service.onrender.com/auth");
+        String soapUrl = System.getenv("SOAP_URL") != null
+            ? System.getenv("SOAP_URL")
+            : "http://localhost:9002/auth";
+        java.net.URL url = new java.net.URL(soapUrl);
         java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "text/xml; charset=utf-8");
